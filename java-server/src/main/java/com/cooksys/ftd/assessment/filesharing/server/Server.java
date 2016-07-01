@@ -24,6 +24,7 @@ public class Server implements Runnable {
 	private UserDao userDao;
 	private FileDao fileDao;
 
+	
 	@Override
 	public void run() {
 		log.info("Server started...");
@@ -40,7 +41,7 @@ public class Server implements Runnable {
 	}
 
 	public ClientHandler createClientHandler(Socket socket) throws IOException {
-		ClientHandler handler = new ClientHandler();
+		ClientHandler handler = new ClientHandler(socket);
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		handler.setReader(reader);
@@ -51,5 +52,37 @@ public class Server implements Runnable {
 		handler.setUserDao(userDao);
 
 		return handler;
+	}
+	
+	public ExecutorService getExecutor() {
+		return executor;
+	}
+
+	public void setExecutor(ExecutorService executor) {
+		this.executor = executor;
+	}
+
+	public ServerSocket getServerSocket() {
+		return serverSocket;
+	}
+
+	public void setServerSocket(ServerSocket serverSocket) {
+		this.serverSocket = serverSocket;
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
+	public FileDao getFileDao() {
+		return fileDao;
+	}
+
+	public void setFileDao(FileDao fileDao) {
+		this.fileDao = fileDao;
 	}
 }

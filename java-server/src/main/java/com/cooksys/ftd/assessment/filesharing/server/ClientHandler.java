@@ -3,6 +3,7 @@ package com.cooksys.ftd.assessment.filesharing.server;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -23,15 +24,24 @@ public class ClientHandler implements Runnable,Closeable{
 	private Socket client;
 	
 	Logger log = LoggerFactory.getLogger(ClientHandler.class);
+	
+	
+
+	public ClientHandler(Socket client) throws IOException {
+		super();
+		this.reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+		this.writer = new PrintWriter(client.getOutputStream(), true);
+		this.client = client;
+	}
 
 	@Override
 	public void run() {
 		try {
-			log.info("handling client {}", this.client.getLocalPort()); // once again may point to a null
+			log.info("handling client...");
 			
 			while (!this.client.isClosed()) {
+				log.info("connected successfully to client...");
 				String message = reader.readLine();
-				log.info("received message [{}] from client {}", message, this.client.getRemoteSocketAddress());
 				
 				if ("disconnect".equalsIgnoreCase(message)) {
 					log.info("User disconnected"); // will be returned to client using Respond<T>
@@ -41,7 +51,7 @@ public class ClientHandler implements Runnable,Closeable{
 				}
 			}
 			
-		} catch (IOException e) {
+		} catch (IOException | NullPointerException e) {
 			log.error("Issue with connection to client", e);
 		}
 		
