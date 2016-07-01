@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -63,6 +65,36 @@ public class UserDao {
 		user = new User(userID, usernameSQL, hashedWord);
 		userOptional = Optional.of(user);
 		return userOptional;
+	}
+	
+	public List<User> getAllUsers() throws SQLException {
+		
+		Integer userID = null;
+		String usernameSQL = null;
+		String hashedWord = null;
+		User user = new User();
+		List<User> userList = new ArrayList<User>();
+		
+		String sql = "select * from user";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		ResultSet rs = stmt.executeQuery();
+
+		log.info("Retrieving user info...");
+		while (rs.next()) {				
+			userID = rs.getInt("user_id");
+			usernameSQL = rs.getString("username");
+			hashedWord = rs.getString("password");
+			
+			user.setUserId(userID);
+			user.setUsername(usernameSQL);
+			user.setPassword(hashedWord);
+			
+			log.info("User Object: {} retrieved", usernameSQL);
+			user = new User(userID, usernameSQL, hashedWord);
+			userList.add(user);
+		}		
+		
+		return userList;
 	}
 		
 	public Connection getConnection() {

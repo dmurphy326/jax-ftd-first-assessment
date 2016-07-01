@@ -57,7 +57,7 @@ ls
   .description('Displays the user/password object')
   .action(function (args, cb) {
     this.log(users)
-    server.write(JSON.stringify(users))
+    this.log(JSON.stringify(users))
     cb()
   })
 
