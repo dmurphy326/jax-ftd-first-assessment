@@ -94,7 +94,7 @@ public class FileDao {
 
 		ResultSet fileKeys = insertFile.getGeneratedKeys();
 		fileKeys.next();
-		// fileKeys.getInt(1); may or may not need this lol
+		fileKeys.getInt(1); 
 	}
 
 	public Connection getConn() {

@@ -24,8 +24,19 @@ public class UserDao {
 		this.conn = conn;
 	}
 
-	public User createUser(User user) {
-		return null; // TODO
+	public void addUser(User user) throws SQLException {
+		PreparedStatement insertUser = conn.prepareStatement(
+				"insert into user (username, password) values(?, ?)",
+				PreparedStatement.RETURN_GENERATED_KEYS);
+		
+		insertUser.setString(1, user.getUsername());
+		insertUser.setString(2, user.getPassword());
+		
+		insertUser.executeUpdate();
+		
+		ResultSet userKeys = insertUser.getGeneratedKeys();
+		userKeys.next();
+		userKeys.getInt(1);
 	}
 	
 	public Optional<User> getUserByUsername(String username) throws SQLException {
